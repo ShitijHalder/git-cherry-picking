@@ -1,6 +1,7 @@
 #!/bin/bash
 
 LOG_FILE="script.log"
+CONFLICTS=()
 
 # Function to handle errors
 handle_error() {
@@ -69,9 +70,16 @@ test_inputs() {
     git cherry-pick "$commit" 2>&1 | tee -a "$LOG_FILE"
 
     if [[ $? -ne 0 ]]; then
-      echo "Encountered a conflict during cherry-pick. Attempting to resolve..." | tee -a "$LOG_FILE"
-      git add . 2>&1 | tee -a "$LOG_FILE"
-      git cherry-pick --continue 2>&1 | tee -a "$LOG_FILE"
+      echo "Encountered a conflict during cherry-pick for commit $commit" | tee -a "$LOG_FILE"
+      CONFLICTS+=("$commit")
+
+      for i in {5..1}; do
+        echo "Conflict detected. Moving on to the next commit in $i seconds..." | tee -a "$LOG_FILE"
+        sleep 1
+      done
+
+      git cherry-pick --abort 2>&1 | tee -a "$LOG_FILE"
+      echo "Aborted cherry-pick for commit $commit" | tee -a "$LOG_FILE"
     fi
 
     # Pop the stashed changes after each cherry-pick
@@ -83,6 +91,13 @@ test_inputs() {
 
   git remote remove source 2>&1 | tee -a "$LOG_FILE"
   echo "Removing source remote" | tee -a "$LOG_FILE"
+
+  if [[ ${#CONFLICTS[@]} -ne 0 ]]; then
+    echo "The following commits encountered conflicts:" | tee -a "$LOG_FILE"
+    for commit in "${CONFLICTS[@]}"; do
+      echo "- $commit" | tee -a "$LOG_FILE"
+    done
+  fi
 }
 
 # Display the banner
@@ -149,4 +164,3 @@ echo "Your due cherry-picks are now done, my guy. Let us move on to the next tas
 read -e -p "Press Enter to exit..."
 
 exit 0
-
