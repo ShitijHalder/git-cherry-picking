@@ -18,16 +18,13 @@ Before you start, keep in mind:
    ```bash
    git clone <your-target-repository-url>
    cd <your-target-repository-directory>
-2. **Download the script using curl:**
+2. **Download the script using curl & Make the script executable:**
     ```bash
-   curl -O https://raw.githubusercontent.com/ShitijHalder/git-cherry-picking/main/cherry-picking.bash
-3. **Make the script executable:**
-     ```bash
-   chmod +x cherry-picking.bash
-4. **Run the script:**  
+   curl -O https://raw.githubusercontent.com/ShitijHalder/git-cherry-picking/main/cherry-picking.bash && chmod +x cherry-picking.bash
+3. **Run the script:**  
      ```bash    
      ./cherry-picking.bash
-5. **Follow the prompts:**
+4. **Follow the prompts:**
    The script will prompt you for the necessary input parameters:
    - Source repository URL
    - Target repository URL
@@ -36,8 +33,8 @@ Before you start, keep in mind:
    - Commit list (full hashes, comma-separated)
    - Git username
    - Git personal access token
-6. **Wait for the process to complete:**
+5. **Wait for the process to complete:**
       This may take a few seconds depending on the number of commits and size of your repository.
 
-7. **And Voilà, you're done!**
+6. **And Voilà, you're done!**
       Your due cherry-picks are now done, my guy. Let us move on to the next task, shall we?  
